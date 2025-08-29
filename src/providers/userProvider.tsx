@@ -1,4 +1,5 @@
 "use client";
+import { MainLoading } from "@/app/_components/main-components";
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -6,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export interface IUser {
   id: string;
@@ -37,6 +38,7 @@ type UserContextType = {
 const UserContext = createContext<UserContextType>({} as UserContextType);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+
   const {
     data: user,
     isLoading,
@@ -46,12 +48,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     queryFn: async () => {
       const storedUser = localStorage.getItem("user");
       const parsedUser = JSON.parse(storedUser!);
+      console.log(parsedUser);
       console.log(parsedUser.email);
 
       try {
         const response = await axios.get(
           `http://localhost:4000/users/byEmail/${parsedUser.email}`
         );
+
         console.log(response.data);
 
         return response.data;
@@ -67,7 +71,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/login");
   };
   // const updateUser=()=>{
-
   // }
 
   return (
@@ -79,7 +82,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading,
       }}
     >
-      {isLoading && user ? <div>...loading</div> : children}
+      {isLoading ? <MainLoading /> : children}
     </UserContext.Provider>
   );
 };

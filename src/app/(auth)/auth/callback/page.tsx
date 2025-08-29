@@ -1,14 +1,15 @@
 "use client";
 
-import { IUser } from "@/providers/userProvider";
+import { useAuth } from "@/providers/authProvider";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function Callback() {
   const params = useSearchParams();
   const router = useRouter();
   const code = params.get("code");
-  const [user, setUser] = useState<IUser>();
+
+  const { setToken, setUserInfo, userInfo } = useAuth();
 
   useEffect(() => {
     if (code) {
@@ -21,27 +22,34 @@ export default function Callback() {
         .then((data) => {
           console.log("Backend Response:", data);
 
-          // sessionToken-г localStorage-д хадгалах (эсвэл cookie)
-          localStorage.setItem("sessionToken", data.sessionToken);
-          localStorage.setItem("user", data.user);
+          const sessionToken = data.session_token || data.sessionToken;
 
-          setUser(data.user);
+          if (!sessionToken) {
+            console.error("No session token received from backend");
+            return;
+          }
 
-          // 🎯 Login амжилттай бол нүүр хуудас руу шилжүүлнэ
+          setToken(sessionToken);
+          setUserInfo(data.user);
+
+          // 🎯 Redirect after login
           router.push("/");
+        })
+        .catch((err) => {
+          console.error("Auth error:", err);
         });
     }
-  }, [code, router]);
+  }, [code, router, setToken, setUserInfo]);
 
   if (!code) return <p>No code provided</p>;
 
   return (
     <div>
       <h2>Microsoft Login Successful 🎉</h2>
-      {user && (
+      {userInfo && (
         <div>
-          <p>Welcome, {user.first_name}</p>
-          <p>Email: {user.email}</p>
+          <p>Welcome, {userInfo.first_name}</p>
+          <p>Email: {userInfo.email}</p>
         </div>
       )}
     </div>

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { AppSidebar } from "../_components/app-sidebar";
 import { MainLoading } from "../_components/main-components";
+import { Providers } from "@/providers/queryClientProvider";
+import { UserProvider } from "@/providers/userProvider";
 
 export default function MainLayout({
   children,
@@ -17,14 +19,18 @@ export default function MainLayout({
   }, []);
   return (
     <>
-      {loading ? (
-        <MainLoading />
-      ) : (
-        <div className="flex w-full">
-          <AppSidebar />
-          <main className="flex-1 w-full">{children}</main>
-        </div>
-      )}
+      <Providers>
+        <UserProvider>
+          {loading ? (
+            <MainLoading />
+          ) : (
+            <div className="flex w-full">
+              <AppSidebar />
+              <main className="flex-1 w-full">{children}</main>
+            </div>
+          )}
+        </UserProvider>
+      </Providers>
     </>
   );
 }
