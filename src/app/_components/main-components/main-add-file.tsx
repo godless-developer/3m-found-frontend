@@ -13,6 +13,9 @@ import { useUploadedFiles } from "@/hooks/use-uploaded-files";
 export function MainAddFile() {
   const { uploadedFiles, setUploadedFiles } = useUploadedFiles();
 
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedType, setSelectedType] = React.useState<string>("");
+
   const handleFileUpload = (file: File) => {
     setUploadedFiles((prev) => [...prev, file]);
     toast.success("Файл нэмэгдлээ!");
@@ -26,18 +29,63 @@ export function MainAddFile() {
     });
   };
 
+  const getFileType = (fileName: string) => {
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    if (!ext) return "other";
+    if (["doc", "docx"].includes(ext)) return "word";
+    if (["xls", "xlsx"].includes(ext)) return "excel";
+    if (["pdf"].includes(ext)) return "pdf";
+    if (["js", "ts", "json"].includes(ext)) return "code";
+    return "other";
+  };
+
+  const filteredFiles = uploadedFiles.filter((file) => {
+    const matchesSearch = file.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesType =
+      selectedType === "all" || selectedType === ""
+        ? true
+        : getFileType(file.name) === selectedType;
+
+    return matchesSearch && matchesType;
+  });
+
+  let message: string | null = null;
+  if (uploadedFiles.length === 0) {
+    message = "Файл байхгүй байна";
+  } else if (filteredFiles.length === 0) {
+    if (searchTerm) {
+      message = `"${searchTerm}" нэртэй файл алга`;
+    } else if (selectedType) {
+      message = "Энэ төрлийн файл алга";
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
-      <AddFileSearchSelect />
-      <div className="grid grid-cols-5 gap-4">
-        <FileUploadComponent onFileUpload={handleFileUpload} />
-        {uploadedFiles.map((file, index) => (
-          <UploadedFile
-            key={index}
-            file={file}
-            onDelete={() => handleDeleteFile(file)}
-          />
-        ))}
+      <AddFileSearchSelect
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+      />
+      <div className="grid grid-cols-5 gap-4 max-h-[630px] rounded-l-[24px] overflow-hidden overflow-y-auto">
+        <div className="sticky top-0 z-10 bg-[#0e0e0e]/40 rounded-[24px] w-[240px] h-[240px]">
+          <FileUploadComponent onFileUpload={handleFileUpload} />
+        </div>
+        {message ? (
+          <p className="col-span-4 text-center text-gray-400">{message}</p>
+        ) : (
+          filteredFiles.map((file, index) => (
+            <UploadedFile
+              key={index}
+              file={file}
+              onDelete={() => handleDeleteFile(file)}
+            />
+          ))
+        )}
       </div>
     </div>
   );
