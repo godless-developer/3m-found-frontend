@@ -50,7 +50,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       const parsedUser = JSON.parse(storedUser!);
       console.log(parsedUser);
       console.log(parsedUser.email);
-
+      if (!parsedUser) {
+        return {};
+      }
       try {
         const response = await axios.get(
           `http://localhost:4000/users/byEmail/${parsedUser.email}`
