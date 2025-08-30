@@ -14,9 +14,12 @@ export default function Login() {
 
   return (
     <div className="w-full h-screen flex">
-      <div className="bg-[url(/login/bg-animate.png)] w-[65%] bg-cover bg-no-repeat bg-center"></div>
+      <div className="bg-[url(/login/bg-animate.png)] w-[60%] bg-cover bg-no-repeat bg-center"></div>
 
-      <div className="w-[35%] flex flex-col justify-center items-center gap-10 bg-[#101522]">
+      <div
+        className="w-[40%] flex flex-col justify-center items-center gap-10 
+            bg-gradient-to-r from-[#010D47] via-[#350f6a] to-[#77036b] animate-gradient"
+      >
         <div className="relative">
           <Image
             src="/login/blob.png"
@@ -31,8 +34,8 @@ export default function Login() {
           <h1 className="font-semibold text-[32px]">Нэвтрэх</h1>
 
           <Button
-            variant="default"
-            className="w-[370px] flex items-center py-6 justify-center gap-2"
+            variant="ghost"
+            className="w-[370px] flex items-center bg-white text-black py-6 rounded-2xl justify-center gap-2"
             onClick={handleLogin}
           >
             <Image
