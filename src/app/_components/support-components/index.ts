@@ -4,3 +4,8 @@ export * from "./upload-file";
 export * from "./uploaded-file";
 export * from "./confirm-delete-uploaded-file";
 export * from "./mini-loading";
+export * from "./filtered-users";
+export * from "./header-main-all-users";
+export * from "./footer-main-all-users";
+export * from "./mini-card";
+export * from "./carditems";

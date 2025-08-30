@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AppSidebar } from "../_components/app-sidebar";
 import { MainLoading } from "../_components/main-components";
+import { SidebarProvider } from "@/providers/sidebar-context";
 
 export default function MainLayout({
   children,
@@ -20,10 +21,12 @@ export default function MainLayout({
       {loading ? (
         <MainLoading />
       ) : (
-        <div className="flex w-full">
-          <AppSidebar />
-          <main className="flex-1 w-full">{children}</main>
-        </div>
+        <SidebarProvider>
+          <div className="flex w-full">
+            <AppSidebar />
+            <main className="w-full">{children}</main>
+          </div>
+        </SidebarProvider>
       )}
     </>
   );

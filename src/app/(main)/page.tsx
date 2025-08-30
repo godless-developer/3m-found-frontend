@@ -8,14 +8,13 @@ import {
   MainAllUsers,
   MainDashboard,
 } from "../_components/main-components";
-import { AppSidebar } from "../_components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MiniLoading } from "../_components/support-components";
+import { useSidebar } from "@/providers/sidebar-context";
 
 export default function Home() {
-  const [active, setActive] = useState("file");
-  const [loading, setLoading] = useState(true);
+  const { active } = useSidebar();
+  const [loading, setLoading] = useState(true); //--> file db deer hadgaldag bolsnii daraa loading aa idewhjvvlnee shvvv
   const labels = [
     { name: "dashboard", label: "Хянах самбар" },
     { name: "file", label: "Файл нэмэх" },
@@ -33,37 +32,38 @@ export default function Home() {
   }, [active, activeLabel]);
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full">
-        <div className="w-[0%]">
-          <AppSidebar onSelect={setActive} active={active} />
-        </div>
-        <main className="flex-1 h-screen pl-1 bg-gradient-to-bl from-[#101522] from-55% to-[#492E6D] overflow-auto">
-          <header className="w-full h-[8%] px-9 py-6 flex justify-between items-center border-b-[1px] border-[#2D2F48]">
-            <h1
-              className="font-[DM Sans] font-bold text-[24px]"
-              title={activeLabel}
-            >
-              {loading ? (
-                <Skeleton className="h-[30px] w-[150px] rounded-lg bg-white/50" />
-              ) : (
-                `${activeLabel}`
-              )}
-            </h1>
-          </header>
-          {loading ? (
-            <MiniLoading />
-          ) : (
-            <div className="px-8 py-12 w-full h-[92%]">
-              {active === "dashboard" && <MainDashboard />}
-              {active === "file" && <MainAddFile />}
-              {active === "ai" && <MainAiSupport />}
-              {active === "task" && <MainAddTask />}
-              {active === "users" && <MainAllUsers />}
-            </div>
-          )}
-        </main>
-      </div>
-    </SidebarProvider>
+    <div className="flex h-screen w-full">
+      <main
+        className={`flex-1 w-full h-screen pl-1 ${
+          active === "users"
+            ? " bg-[#101522]"
+            : "bg-gradient-to-bl from-[#101522] from-55% to-[#492E6D]"
+        } overflow-auto`}
+      >
+        <header className="w-[100%] shrink-0 px-9 py-6 flex justify-between items-center border-b-[1px] border-[#2D2F48]">
+          <h1
+            className="font-[DM Sans] font-bold text-[24px]"
+            title={activeLabel}
+          >
+            {loading ? (
+              <Skeleton className="h-[30px] w-[150px] rounded-lg bg-white/50" />
+            ) : (
+              `${activeLabel}`
+            )}
+          </h1>
+        </header>
+        {loading ? (
+          <MiniLoading />
+        ) : (
+          <div className="px-8 py-8 w-full flex-1 overflow-y-auto">
+            {active === "dashboard" && <MainDashboard />}
+            {active === "file" && <MainAddFile />}
+            {active === "ai" && <MainAiSupport />}
+            {active === "task" && <MainAddTask />}
+            {active === "users" && <MainAllUsers />}
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

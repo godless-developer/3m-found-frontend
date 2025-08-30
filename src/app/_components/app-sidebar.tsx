@@ -15,19 +15,13 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { useSidebar } from "@/providers/sidebar-context";
 
-type Props = {
-  onSelect?: (value: string) => void;
-  active?: string;
-};
+export function AppSidebar() {
+  const { active, setActive } = useSidebar();
 
-export function AppSidebar({ onSelect, active }: Props) {
   const labels = [
-    {
-      name: "dashboard",
-      label: "Хянах самбар",
-      icon: <ChartColumnBig />,
-    },
+    { name: "dashboard", label: "Хянах самбар", icon: <ChartColumnBig /> },
     { name: "file", label: "Файл нэмэх", icon: <FileUp /> },
     { name: "ai", label: "AI туслах", icon: <Sparkles /> },
     { name: "task", label: "Task нэмэх", icon: <ListPlus /> },
@@ -35,7 +29,7 @@ export function AppSidebar({ onSelect, active }: Props) {
   ];
 
   return (
-    <Sidebar className="border-r-[1px] border-[#333] w-[15%] ">
+    <Sidebar className="border-r-[1px] border-[#333]">
       <SidebarContent className="bg-[#0C101C] border-none text-white p-4 font-[DM Sans]">
         <SidebarGroup>
           <SidebarGroupContent className="flex gap-6 items-center px-2 pb-16">
@@ -49,31 +43,31 @@ export function AppSidebar({ onSelect, active }: Props) {
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
+
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-col gap-6">
               {labels.map((item) => {
                 const isActive = active === item.name;
                 return (
-                  <div key={item.name}>
-                    <div
-                      onClick={() => onSelect?.(item.name)}
-                      className={`flex items-center gap-2 p-2 rounded-[8px] transition-colors duration-300
+                  <div
+                    key={item.name}
+                    onClick={() => setActive(item.name)}
+                    className={`flex items-center gap-2 p-2 rounded-[8px] transition-colors duration-300 cursor-pointer
                       ${
                         isActive
                           ? "bg-[#1B202F] text-[#7CC8F5]"
-                          : "bg-transparent cursor-pointer"
+                          : "bg-transparent"
+                      }`}
+                  >
+                    <div
+                      className={`${
+                        isActive ? "text-[#7CC8F5]" : "text-white"
                       }`}
                     >
-                      <div
-                        className={`${
-                          isActive ? "text-[#7CC8F5]" : "text-white"
-                        }`}
-                      >
-                        {item.icon}
-                      </div>
-                      <span>{item.label}</span>
+                      {item.icon}
                     </div>
+                    <span>{item.label}</span>
                   </div>
                 );
               })}
