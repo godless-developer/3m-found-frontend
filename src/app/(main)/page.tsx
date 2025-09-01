@@ -24,9 +24,17 @@ export default function Home() {
   ];
 
   const activeLabel = labels.find((item) => item.name === active)?.label || "";
-
   useEffect(() => {
     setLoading(true);
+    localStorage.setItem("sessionToken", "haha");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        first_name: "sodgerel",
+        email: "sodgerel.g@techpack.mn",
+      })
+    );
+
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, [active, activeLabel]);

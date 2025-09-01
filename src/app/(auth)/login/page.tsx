@@ -3,13 +3,22 @@
 import { InfoTooltip } from "@/app/_components/support-components/info-tooltip";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const router = useRouter();
-
   const handleLogin = () => {
-    router.push("/");
+    const clientId = process.env.NEXT_PUBLIC_AZURE_CLIENT_ID;
+    const tenantId = process.env.NEXT_PUBLIC_AZURE_TENANT_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_AZURE_REDIRECT_URI;
+
+    const authUrl =
+      `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize` +
+      `?client_id=${clientId}` +
+      `&response_type=code` +
+      `&redirect_uri=${encodeURIComponent(redirectUri ?? "")}` +
+      `&response_mode=query` +
+      `&scope=openid profile email User.Read`;
+
+    window.location.href = authUrl;
   };
 
   return (

@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { truncateFileName } from "@/hooks/truncate-file-name";
+import { StoredFile } from "@/hooks/use-uploaded-files";
 import { File, Trash } from "lucide-react";
 import Image from "next/image";
 
 type UploadedFileProps = {
-  file: File;
+  file: StoredFile;
   onDelete: () => void;
 };
 

@@ -9,8 +9,8 @@ interface ConfirmDeleteToastProps {
 }
 
 export function confirmDeleteUploadedFile({
-  fileName,
   onConfirm,
+  fileName,
 }: ConfirmDeleteToastProps) {
   toast.custom((t) => (
     <div className="backdrop-blur-[6px] rounded-xl shadow-lg p-4 flex flex-col gap-3">
@@ -24,7 +24,6 @@ export function confirmDeleteUploadedFile({
           onClick={() => {
             onConfirm();
             toast.dismiss(t);
-            toast.success("Амжилттай устлаа!");
           }}
         >
           Тийм

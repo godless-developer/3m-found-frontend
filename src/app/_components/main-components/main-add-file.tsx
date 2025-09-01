@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { toast } from "sonner";
 import {
   AddFileSearchSelect,
   confirmDeleteUploadedFile,
@@ -9,23 +8,33 @@ import {
   UploadedFile,
 } from "../support-components";
 import { useUploadedFiles } from "@/hooks/use-uploaded-files";
+import { deleteFile, uploadFile } from "@/utils/requests";
+import { toast } from "sonner";
 
 export function MainAddFile() {
-  const { uploadedFiles, setUploadedFiles } = useUploadedFiles();
+  const { uploadedFiles, getData } = useUploadedFiles();
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const [selectedType, setSelectedType] = React.useState<string>("");
 
-  const handleFileUpload = (file: File) => {
-    setUploadedFiles((prev) => [...prev, file]);
-    toast.success("Файл нэмэгдлээ!");
+  const handleFileUpload = async (file: File) => {
+    const response = await uploadFile(file);
+    if (response) {
+      toast("file amjilltai nemlee");
+      getData();
+    }
   };
 
-  const handleDeleteFile = (file: File) => {
+  const handleDeleteFile = (id: string, fileName: string) => {
     confirmDeleteUploadedFile({
-      fileName: file.name,
-      onConfirm: () =>
-        setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name)),
+      fileName,
+      onConfirm: () => {
+        try {
+          deleteFile(id, getData);
+        } catch (error) {
+          console.log(error);
+        }
+      },
     });
   };
 
@@ -95,7 +104,7 @@ export function MainAddFile() {
             <UploadedFile
               key={index}
               file={file}
-              onDelete={() => handleDeleteFile(file)}
+              onDelete={() => handleDeleteFile(file.id, file.name)}
             />
           ))
         )}
