@@ -77,47 +77,35 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                 key={idx}
                 className={`flex gap-5 w-full max-w-full ${marginClass}`}
               >
-                {/* Message content */}
                 <div className="relative max-w-[879px] w-full">
-                  {/* Timestamp - top right */}
                   {isAI ? (
-                    // Assistant message bubble
                     <div className="flex gap-4 p-4 rounded-xl border border-[#344054B3] bg-[#1B202FB2] text-[#98A2B3] max-w-[879px] w-full">
-                      {/* Avatar */}
                       <div className="shrink-0">
                         {msg.received ? (
                           <Blob className="" />
                         ) : (
                           <Avatar className="w-12 h-12">
                             <AvatarImage src={"/profile.jpg"} />
-                            <AvatarFallback>
-                              {/* {msg.name?.[0] || "A"} */}
-                            </AvatarFallback>
+                            <AvatarFallback></AvatarFallback>
                           </Avatar>
                         )}
                       </div>
-                      {/* Content: name, timestamp, and message */}
                       <div className="flex flex-col max-w-[827px] w-full">
                         <div className="flex items-center justify-between w-full">
-                          {/* Name */}
                           <span className="text-[#C8CBCF] text-xl font-semibold">
                             {msg.received || "User"}
                           </span>
-                          {/* Timestamp */}
                           <span className="text-[#C8CBCF] text-[18px] font-normal ml-4">
                             {formatTime(msg.createdAt!)}
                           </span>
                         </div>
-                        {/* Message */}
                         <div className="text-xl whitespace-pre-wrap break-all font-normal mt-1">
                           {msg.content}
                         </div>
                       </div>
                     </div>
                   ) : (
-                    // User message: avatar, username, and message (no bubble)
                     <div className="flex gap-4 items-center max-w-[879px] w-full">
-                      {/* Avatar */}
                       <div className="shrink-0">
                         <Avatar className="w-12 h-12">
                           <AvatarImage src={"/blob.png"} />
@@ -125,19 +113,15 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                           <AvatarFallback></AvatarFallback>
                         </Avatar>
                       </div>
-                      {/* Content: name, timestamp, and message */}
                       <div className="flex flex-col max-w-[827px] w-full">
                         <div className="flex items-center justify-between w-full">
-                          {/* Name */}
                           <span className="text-[#C8CBCF] text-xl font-semibold">
                             {msg.received || "User"}
                           </span>
-                          {/* Timestamp */}
                           <span className="text-[#C8CBCF] text-[18px] font-normal ml-4">
                             {formatTime(msg.createdAt!)}
                           </span>
                         </div>
-                        {/* Message */}
                         <div className="text-xl whitespace-pre-wrap break-all font-normal text-[#D0D5DD] mt-1">
                           {msg.content}
                         </div>
