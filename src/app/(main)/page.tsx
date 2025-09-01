@@ -10,7 +10,6 @@ import {
 } from "../_components/main-components";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MiniLoading } from "../_components/support-components";
-import { useUser } from "@/providers/userProvider";
 import { useSidebar } from "@/providers/sidebar-context";
 
 export default function Home() {
@@ -25,7 +24,6 @@ export default function Home() {
   ];
 
   const activeLabel = labels.find((item) => item.name === active)?.label || "";
-  const { user } = useUser();
   useEffect(() => {
     setLoading(true);
     localStorage.setItem("sessionToken", "haha");
@@ -40,7 +38,6 @@ export default function Home() {
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, [active, activeLabel]);
-  console.log(user);
 
   return (
     <div className="flex h-screen w-full">

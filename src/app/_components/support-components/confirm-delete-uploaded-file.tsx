@@ -4,13 +4,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 interface ConfirmDeleteToastProps {
-  id: string;
   fileName: string;
   onConfirm: () => void;
 }
 
 export function confirmDeleteUploadedFile({
-  id,
   onConfirm,
   fileName,
 }: ConfirmDeleteToastProps) {
@@ -26,7 +24,6 @@ export function confirmDeleteUploadedFile({
           onClick={() => {
             onConfirm();
             toast.dismiss(t);
-            toast.success("Амжилттай устлаа!");
           }}
         >
           Тийм

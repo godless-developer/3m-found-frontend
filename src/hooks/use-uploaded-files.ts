@@ -24,7 +24,6 @@ export function useUploadedFiles() {
       }
     );
     setUploadedFiles(formattedFiles);
-    console.log(res);
   };
 
   useEffect(() => {

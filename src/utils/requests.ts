@@ -1,4 +1,4 @@
-import { IUser, useUser } from "@/providers";
+import { IUser } from "@/providers";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -13,7 +13,7 @@ export const getFiles = async () => {
   }
 };
 
-export const deleteFile = async (id: string) => {
+export const deleteFile = async (id: string, getData: () => Promise<void>) => {
   try {
     const response = await axios.delete(
       `${process.env.NEXT_PUBLIC_BASE_URL}/file`,
@@ -22,11 +22,13 @@ export const deleteFile = async (id: string) => {
       }
     );
     if (response.data.success) {
-      toast("Файлыг амжилттай устгалаа.");
+      toast.success("Файлыг амжилттай устгалаа.");
     }
   } catch (error) {
     console.log(error);
-    toast("Файл устгахад алдаа гарлаа.");
+    toast.error("Файл устгахад алдаа гарлаа.");
+  } finally {
+    setTimeout(() => getData(), 30_000);
   }
 };
 
@@ -44,12 +46,12 @@ export const uploadFile = async (file: File) => {
       }
     );
     const jsonResponse = response.json();
-    toast("Файл амжилттай орууллаа.");
+    toast.success("Файл амжилттай орууллаа.");
 
     return jsonResponse;
   } catch (error) {
     console.log(error);
-    toast("Файл оруулахад алдаа гарлаа.");
+    toast.error("Файл оруулахад алдаа гарлаа.");
   }
 };
 

@@ -28,14 +28,11 @@ export function MainAddFile() {
   const handleDeleteFile = (id: string, fileName: string) => {
     confirmDeleteUploadedFile({
       fileName,
-      id,
       onConfirm: () => {
         try {
-          deleteFile(id);
+          deleteFile(id, getData);
         } catch (error) {
           console.log(error);
-        } finally {
-          getData();
         }
       },
     });
