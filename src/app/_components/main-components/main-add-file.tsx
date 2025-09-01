@@ -82,13 +82,26 @@ export function MainAddFile() {
         setSearchTerm={setSearchTerm}
         selectedType={selectedType}
         setSelectedType={setSelectedType}
+        options={[
+          { value: "all", label: "All files" },
+          { value: "word", label: "Word files" },
+          { value: "excel", label: "Excel files" },
+          { value: "pdf", label: "PDF files" },
+          { value: "code", label: "Ts/Js files" },
+          { value: "other", label: "Other files" },
+        ]}
+        tooltip="Энэ бол байгууллагатайгаа холбоотой бүхий л дотоод журам, мэдээлэлээ нэг дор хадгалдаг булан шүү"
+        selectDate="Файлын төрлүүд"
+        inputHolder="Файлын нэрээр..."
       />
       <div className="grid grid-cols-5 gap-4 max-h-[630px] rounded-l-[24px] overflow-hidden overflow-y-auto">
         <div className="sticky top-0 z-10 bg-[#0e0e0e]/40 rounded-[24px] w-[240px] h-[240px]">
           <FileUploadComponent onFileUpload={handleFileUpload} />
         </div>
         {message ? (
-          <p className="col-span-4 text-center text-gray-400">{message}</p>
+          <div className="w-[240px] h-[240px] justify-center items-center">
+            <p className="text-center text-gray-400">{message}</p>
+          </div>
         ) : (
           filteredFiles.map((file, index) => (
             <UploadedFile

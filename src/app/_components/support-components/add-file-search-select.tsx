@@ -11,11 +11,20 @@ import {
 } from "@/components/ui/select";
 import { InfoTooltip } from "./info-tooltip";
 
+type Option = {
+  value: string;
+  label: string;
+};
+
 type Props = {
   searchTerm: string;
   setSearchTerm: (v: string) => void;
   selectedType: string;
   setSelectedType: (v: string) => void;
+  options: Option[];
+  tooltip: string;
+  selectDate: string;
+  inputHolder: string;
 };
 
 export function AddFileSearchSelect({
@@ -23,13 +32,17 @@ export function AddFileSearchSelect({
   setSearchTerm,
   selectedType,
   setSelectedType,
+  options,
+  tooltip,
+  selectDate,
+  inputHolder,
 }: Props) {
   return (
     <div className="flex justify-between items-center">
       <div className="relative">
         <Search className="absolute top-2.5 left-2" size={17} color="#797777" />
         <Input
-          placeholder="Хайх..."
+          placeholder={inputHolder}
           className="pl-8 outline-none"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -37,26 +50,26 @@ export function AddFileSearchSelect({
       </div>
 
       <div className="flex gap-4">
-        <InfoTooltip
-          text="Энэ бол байгууллагатайгаа холбоотой бүхий л дотоод журам, мэдээлэлээ нэг дор хадгалдаг булан шүү"
-          side="left"
-        />
+        <InfoTooltip text={tooltip} side="left" />
         <Select
           value={selectedType}
           onValueChange={(value) => setSelectedType(value)}
         >
-          <SelectTrigger className="w-[150px] cursor-pointer">
-            <SelectValue placeholder="Төрөл сонгох" />
+          <SelectTrigger className="w-[165px] cursor-pointer">
+            <SelectValue placeholder={selectDate} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Төрөлүүд</SelectLabel>
-              <SelectItem value="all">All files</SelectItem>
-              <SelectItem value="word">Word files</SelectItem>
-              <SelectItem value="excel">Excel files</SelectItem>
-              <SelectItem value="pdf">PDF files</SelectItem>
-              <SelectItem value="code">Ts/Js files</SelectItem>
-              <SelectItem value="other">Other files</SelectItem>
+              <SelectLabel>Сонголтууд</SelectLabel>
+              {options.map((opt) => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="cursor-pointer"
+                >
+                  {opt.label}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
