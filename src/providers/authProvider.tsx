@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { IUser } from "./userProvider";
 
 interface AuthContextType {
@@ -12,30 +18,47 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setTokenState] = useState<string | null>(() => {
-    return localStorage.getItem("sessionToken");
-  });
+  const [token, setTokenState] = useState<string | null>(null);
+  const [userInfo, setUserState] = useState<IUser | null>(null);
 
-  const [userInfo, setUserState] = useState<IUser | null>(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
-  });
+  // Client дээр л localStorage-г унших
+  useEffect(() => {
+    const savedToken = localStorage.getItem("sessionToken");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedToken) {
+      setTokenState(savedToken);
+    }
+
+    if (savedUser) {
+      try {
+        setUserState(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Error parsing saved user:", error);
+        localStorage.removeItem("user");
+      }
+    }
+  }, []);
 
   const setToken = (newToken: string | null) => {
     setTokenState(newToken);
-    if (newToken) {
-      localStorage.setItem("sessionToken", newToken);
-    } else {
-      localStorage.removeItem("sessionToken");
+    if (typeof window !== "undefined") {
+      if (newToken) {
+        localStorage.setItem("sessionToken", newToken);
+      } else {
+        localStorage.removeItem("sessionToken");
+      }
     }
   };
 
   const setUserInfo = (newUser: IUser | null) => {
     setUserState(newUser);
-    if (newUser) {
-      localStorage.setItem("user", JSON.stringify(newUser));
-    } else {
-      localStorage.removeItem("user");
+    if (typeof window !== "undefined") {
+      if (newUser) {
+        localStorage.setItem("user", JSON.stringify(newUser));
+      } else {
+        localStorage.removeItem("user");
+      }
     }
   };
 

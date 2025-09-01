@@ -4,3 +4,6 @@ export * from "./upload-file";
 export * from "./uploaded-file";
 export * from "./confirm-delete-uploaded-file";
 export * from "./mini-loading";
+export * from "./ChatMessages";
+export * from "./message-input";
+export * from "./Assistant.module.css";

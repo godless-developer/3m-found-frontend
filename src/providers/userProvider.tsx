@@ -1,4 +1,5 @@
 "use client";
+
 import { MainLoading } from "@/app/_components/main-components";
 import {
   QueryObserverResult,
@@ -7,16 +8,16 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 
 export interface IUser {
   id: string;
   first_name: string;
   last_name: string;
   email: string;
-  phone_number?: number; //ask
+  phone_number?: number;
   dob?: Date;
-  address?: string; //ask
+  address?: string;
   profile_img?: string;
   gender?: string;
   password?: string;
@@ -26,16 +27,18 @@ export interface IUser {
   user_role_id: string;
   status?: string;
 }
+
 type UserContextType = {
-  user: IUser;
+  user: IUser | null;
   handleLogout: () => void;
   refetch: (
     options?: RefetchOptions | undefined
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => Promise<QueryObserverResult<any, Error>>;
+  ) => Promise<QueryObserverResult<IUser | null, Error>>;
   isLoading: boolean;
 };
+
 const UserContext = createContext<UserContextType>({} as UserContextType);
+
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
@@ -43,26 +46,31 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     data: user,
     isLoading,
     refetch,
-  } = useQuery({
+  } = useQuery<IUser | null>({
     queryKey: ["users"],
     queryFn: async () => {
       const storedUser = localStorage.getItem("user");
-      const parsedUser = JSON.parse(storedUser!);
-      console.log(parsedUser);
-      console.log(parsedUser.email);
-      if (!parsedUser) {
-        return {};
+
+      if (!storedUser) {
+        return null;
       }
+
+      let parsedUser: IUser;
+      try {
+        parsedUser = JSON.parse(storedUser);
+      } catch (error) {
+        console.error("Failed to parse user from localStorage:", error);
+        return null;
+      }
+
       try {
         const response = await axios.get(
-          `http://localhost:4000/users/byEmail/${parsedUser.email}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/users/byEmail/${parsedUser.email}`
         );
-
-        console.log(response.data);
-
         return response.data;
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching user:", error);
+        return null;
       }
     },
   });
@@ -72,26 +80,25 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("sessionToken");
     router.push("/login");
   };
-  // const updateUser=()=>{
-  // }
 
   return (
     <UserContext.Provider
       value={{
-        user: user,
+        user: user ?? null,
         handleLogout,
         refetch,
         isLoading,
       }}
     >
-      {isLoading ? <MainLoading /> : children}
+      {isLoading ? <div>...loading</div> : children}
     </UserContext.Provider>
   );
 };
+
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    console.log("context is not defined");
+    throw new Error("useUser must be used inside UserProvider");
   }
   return context;
 };
