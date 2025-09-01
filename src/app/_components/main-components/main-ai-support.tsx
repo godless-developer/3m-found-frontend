@@ -13,13 +13,20 @@ export function MainAiSupport() {
   const { user } = useUser();
   const sendMessageHandler = async () => {
     if (input !== "") {
-      setMessages((prev) => [...prev, { received: false, content: input }]);
+      setMessages((prev) => [
+        ...prev,
+        { received: false, content: input, createdAt: Date() },
+      ]);
       try {
         const response = await sendMessage(input, user!);
 
         setInput("");
-        setMessages((prev) => [...prev, { received: true, content: response }]);
+        setMessages((prev) => [
+          ...prev,
+          { received: true, content: response, createdAt: Date() },
+        ]);
         setIsLoading(true);
+        console.log(messages);
       } catch (error) {
         console.log(error);
       } finally {
@@ -29,7 +36,7 @@ export function MainAiSupport() {
   };
 
   return (
-    <div className="flex h-full  text-white font-gip relative overflow-hidden">
+    <div className="flex h-full w-full text-white font-gip relative overflow-hidden">
       <div className="flex-1 flex flex-col relative">
         <div className="flex-1 flex flex-col h-0">
           {messages.length === 0 ? (
@@ -61,7 +68,6 @@ export function MainAiSupport() {
                   />
                 </div>
 
-                {/* Quick action buttons */}
                 <div className="flex gap-2 justify-center mt-4">
                   {[
                     "Байгууллагын үнэт зүйл",

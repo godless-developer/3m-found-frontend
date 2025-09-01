@@ -25,16 +25,15 @@ export default function MainLayout({
           {loading ? (
             <MainLoading />
           ) : (
-             <SidebarProvider>
-            <div className="flex w-full">
-              <AppSidebar />
-              <main className="flex-1 w-full">{children}</main>
-            </div>
-               </SidebarProvider>
+            <SidebarProvider>
+              <div className="flex w-full">
+                <AppSidebar />
+                <main className="flex-1 w-full">{children}</main>
+              </div>
+            </SidebarProvider>
           )}
         </UserProvider>
       </Providers>
-
     </>
   );
 }

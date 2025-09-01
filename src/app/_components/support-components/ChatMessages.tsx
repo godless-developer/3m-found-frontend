@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Blob from "./Blob";
 import styles from "./Assistant.module.css";
 import { Message } from "./message-input";
+import { useUser } from "@/providers";
 
 type ChatMessagesProps = {
   messages: Message[];
@@ -15,6 +16,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
   isLoading,
   bottomRef,
 }) => {
+  const { user } = useUser();
   const groupedMessages = messages.reduce((groups, msg) => {
     const date = new Date(msg.createdAt!);
     const dateKey = date.toDateString();
@@ -81,22 +83,18 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                   {isAI ? (
                     <div className="flex gap-4 p-4 rounded-xl border border-[#344054B3] bg-[#1B202FB2] text-[#98A2B3] max-w-[879px] w-full">
                       <div className="shrink-0">
-                        {msg.received ? (
-                          <Blob className="" />
-                        ) : (
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={"/profile.jpg"} />
-                            <AvatarFallback></AvatarFallback>
-                          </Avatar>
-                        )}
+                        <Blob />
                       </div>
                       <div className="flex flex-col max-w-[827px] w-full">
                         <div className="flex items-center justify-between w-full">
-                          <span className="text-[#C8CBCF] text-xl font-semibold">
-                            {msg.received || "User"}
-                          </span>
-                          <span className="text-[#C8CBCF] text-[18px] font-normal ml-4">
-                            {formatTime(msg.createdAt!)}
+                          <span
+                            className="bg-clip-text text-transparent text-xl font-bold"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(93.26deg, #82BCDF 11.08%, #967ADE 54.22%, #CB98E5 83.62%)",
+                            }}
+                          >
+                            HR
                           </span>
                         </div>
                         <div className="text-xl whitespace-pre-wrap break-all font-normal mt-1">
@@ -105,24 +103,17 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex gap-4 items-center max-w-[879px] w-full">
+                    <div className="flex-row-reverse flex gap-4  items-center max-w-[879px] w-full">
                       <div className="shrink-0">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src={"/blob.png"} />
-
-                          <AvatarFallback></AvatarFallback>
-                        </Avatar>
+                        <Blob />
                       </div>
                       <div className="flex flex-col max-w-[827px] w-full">
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-row-reverse items-center justify-between w-full">
                           <span className="text-[#C8CBCF] text-xl font-semibold">
-                            {msg.received || "User"}
-                          </span>
-                          <span className="text-[#C8CBCF] text-[18px] font-normal ml-4">
-                            {formatTime(msg.createdAt!)}
+                            {user?.first_name}
                           </span>
                         </div>
-                        <div className="text-xl whitespace-pre-wrap break-all font-normal text-[#D0D5DD] mt-1">
+                        <div className="text-xl w-full flex justify-end whitespace-pre-wrap break-all font-normal text-[#D0D5DD] mt-1">
                           {msg.content}
                         </div>
                       </div>
@@ -135,7 +126,6 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
         </div>
       ))}
 
-      {/* Loading */}
       {isLoading && (
         <div className="flex gap-3 self-start items-start max-w-[80%]">
           <div className="bg-[#1f2937] text-white px-4 py-2 rounded-xl text-sm flex items-center gap-2 ml-16 mt-[50px]">
