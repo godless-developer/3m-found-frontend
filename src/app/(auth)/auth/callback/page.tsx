@@ -16,7 +16,7 @@ export default function Callback() {
       fetch("http://localhost:4000/auth/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, isWeb: true }),
       })
         .then((res) => res.json())
         .then((data) => {
