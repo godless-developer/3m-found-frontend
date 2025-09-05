@@ -16,7 +16,7 @@ export default function Login() {
       `&response_type=code` +
       `&redirect_uri=${encodeURIComponent(redirectUri ?? "")}` +
       `&response_mode=query` +
-      `&scope=openid profile email User.Read`;
+      `&scope=openid profile offline_access email User.Read`;
 
     window.location.href = authUrl;
   };

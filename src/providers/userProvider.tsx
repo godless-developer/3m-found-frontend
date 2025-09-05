@@ -1,6 +1,5 @@
 "use client";
 
-import { MainLoading } from "@/app/_components/main-components";
 import {
   QueryObserverResult,
   RefetchOptions,

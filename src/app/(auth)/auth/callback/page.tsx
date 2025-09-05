@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useAuth } from "@/providers/authProvider";
@@ -12,11 +13,21 @@ export default function Callback() {
   const { setToken, setUserInfo, userInfo } = useAuth();
 
   useEffect(() => {
-    if (code) {
+    const storedUser = localStorage.getItem("user");
+
+    // only fetch if sessionToken is not already set
+    if (code && !userInfo) {
+      const body: any = { isWeb: true };
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        body.email = parsedUser.email;
+      }
+      body.code = code;
+
       fetch("http://localhost:4000/auth/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, isWeb: true }),
+        body: JSON.stringify(body),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -39,7 +50,7 @@ export default function Callback() {
           console.error("Auth error:", err);
         });
     }
-  }, [code, router, setToken, setUserInfo]);
+  }, [code, router, setToken, setUserInfo, userInfo]);
 
   if (!code) return <p>No code provided</p>;
 
